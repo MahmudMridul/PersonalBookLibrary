@@ -1,0 +1,8 @@
+#ui
+library-ui/node_modules/*
+library-ui/build/*
+
+#api
+LibraryAPI/.vs/*
+LibraryAPI/bin/*
+LibraryAPI/obj/*
