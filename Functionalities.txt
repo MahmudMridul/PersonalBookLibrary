@@ -1,0 +1,13 @@
+app will show -
+books user has read
+books user wants to read
+books user has
+
+app will suggest a user few books that other users are reading 
+but he is not
+
+user can add a book from his collection
+
+user can delete a book from his collection
+
+
