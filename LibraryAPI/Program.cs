@@ -1,4 +1,7 @@
 
+using LibraryAPI.Db;
+using Microsoft.EntityFrameworkCore;
+
 namespace LibraryAPI
 {
     public class Program
@@ -8,6 +11,11 @@ namespace LibraryAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            // Add db context
+            builder.Services.AddDbContext<LibraryContext>(
+                ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+                );
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
