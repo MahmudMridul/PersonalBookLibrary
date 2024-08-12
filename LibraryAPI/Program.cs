@@ -1,5 +1,7 @@
 
 using LibraryAPI.Db;
+using LibraryAPI.Repository;
+using LibraryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +19,9 @@ namespace LibraryAPI
             builder.Services.AddDbContext<LibraryContext>(
                 ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
                 );
+
+            // Add repositories
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddControllers(options =>
             {
