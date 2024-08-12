@@ -1,8 +1,8 @@
 ﻿using LibraryAPI.Db;
 using LibraryAPI.Models;
 using LibraryAPI.Models.DTOs;
+using LibraryAPI.Repository.IRepository;
 using LibraryAPI.Utils;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -13,12 +13,12 @@ namespace LibraryAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly LibraryContext _db;
+        private readonly IUserRepository _repo;
         private readonly ApiResponse _response;
 
-        public UserController(LibraryContext db) 
+        public UserController(IUserRepository repo) 
         {
-            _db = db;
+            _repo = repo;
             _response = new ApiResponse();
         }
 
@@ -46,8 +46,9 @@ namespace LibraryAPI.Controllers
                     PasswordSalt = salt
                 };
 
-                await _db.Users.AddAsync(user);
-                await _db.SaveChangesAsync();
+                await _repo.RegisterUser(user);
+                //await _db.Users.AddAsync(user);
+                //await _db.SaveChangesAsync();
 
                 CreateResponse(HttpStatusCode.OK, "Registration successfull", user, true);
 
@@ -66,7 +67,7 @@ namespace LibraryAPI.Controllers
         {
             try
             {
-                IEnumerable<User> users = await _db.Users.ToListAsync();
+                IEnumerable<User> users = await _repo.GetAllUsers();
                 string message = users.Any() ? "All users retrieved" : "No users found";
                 CreateResponse(HttpStatusCode.OK, message, users, true);
                 return Ok(_response);
