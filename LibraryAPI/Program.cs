@@ -1,5 +1,6 @@
 
 using LibraryAPI.Db;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAPI
@@ -17,7 +18,10 @@ namespace LibraryAPI
                 ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
                 );
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add(new ProducesAttribute("application/json"));
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
