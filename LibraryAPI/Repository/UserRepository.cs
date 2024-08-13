@@ -1,8 +1,6 @@
 ﻿using LibraryAPI.Db;
 using LibraryAPI.Models;
-using LibraryAPI.Models.DTOs;
 using LibraryAPI.Repository.IRepository;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAPI.Repository
@@ -26,6 +24,11 @@ namespace LibraryAPI.Repository
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
             return user;
+        }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await _db.Users.AnyAsync(user => user.Email.Equals(email));
         }
     }
 }
