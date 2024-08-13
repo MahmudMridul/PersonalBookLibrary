@@ -30,5 +30,10 @@ namespace LibraryAPI.Repository
         {
             return await _db.Users.AnyAsync(user => user.Email.Equals(email));
         }
+
+        public async Task<User?> GetUserByEmail(string email)
+        {
+            return await _db.Users.SingleOrDefaultAsync(user => user.Email.Equals(email));
+        }
     }
 }

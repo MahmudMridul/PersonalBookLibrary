@@ -9,5 +9,6 @@ namespace LibraryAPI.Repository.IRepository
         Task<IEnumerable<User>> GetAllUsers();
         Task<User> RegisterUser(User user);
         Task<bool> EmailExists(string email);
+        Task<User?> GetUserByEmail(string email);
     }
 }
