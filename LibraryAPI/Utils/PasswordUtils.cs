@@ -47,5 +47,11 @@ namespace LibraryAPI.Utils
             }
             return "";
         }
+
+        internal static bool IsPasswordValid(string givenPassword, string dbPassHash, byte[] salt)
+        {
+            string givenPassHash = HashPassword(givenPassword, salt);
+            return givenPassHash.Equals(dbPassHash);
+        }
     }
 }
