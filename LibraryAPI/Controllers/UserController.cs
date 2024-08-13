@@ -4,7 +4,6 @@ using LibraryAPI.Models.DTOs;
 using LibraryAPI.Repository.IRepository;
 using LibraryAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace LibraryAPI.Controllers
@@ -35,6 +34,13 @@ namespace LibraryAPI.Controllers
         {
             try
             {
+                bool emailExists = await _repo.EmailExists(regDTO.Email);
+                if (emailExists)
+                {
+                    CreateResponse(HttpStatusCode.BadRequest, "A user with this email already exists");
+                    return BadRequest(_response);
+                }
+
                 byte[] salt = PasswordUtils.GenerateSalt();
                 string hashedPassword = PasswordUtils.HashPassword(regDTO.Password, salt);
 
@@ -45,21 +51,21 @@ namespace LibraryAPI.Controllers
                     PasswordHash = hashedPassword,
                     PasswordSalt = salt
                 };
-
                 await _repo.RegisterUser(user);
-                //await _db.Users.AddAsync(user);
-                //await _db.SaveChangesAsync();
-
                 CreateResponse(HttpStatusCode.OK, "Registration successfull", user, true);
-
                 return Ok(_response);
-
             }
             catch (Exception ex)
             {
                 CreateResponse(HttpStatusCode.InternalServerError, $"Registration failed: {ex.Message}");
                 return BadRequest(_response);
             }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ApiResponse>> Login(UserLoginDTO loginDTO) 
+        {
+
         }
 
         [HttpGet] 
