@@ -65,7 +65,29 @@ namespace LibraryAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ApiResponse>> Login(UserLoginDTO loginDTO) 
         {
+            try
+            {
+                User? user = await _repo.GetUserByEmail(loginDTO.Email);
+                if(user == null)
+                {
+                    CreateResponse(HttpStatusCode.BadRequest, "No user found");
+                    return BadRequest(_response);
+                }
+                if (!PasswordUtils.IsPasswordValid(loginDTO.Password, user.PasswordHash, user.PasswordSalt))
+                {
+                    CreateResponse(HttpStatusCode.BadRequest, "Wrong credentials");
+                    return BadRequest(_response);
+                }
 
+                string token = TokenUtils.GetToken(user.Name, user.PasswordHash);
+                CreateResponse(HttpStatusCode.OK, "Login successfull", token, true);
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                CreateResponse(HttpStatusCode.InternalServerError, $"Login failed: {e.Message}");
+                return BadRequest(_response);
+            }
         }
 
         [HttpGet] 
