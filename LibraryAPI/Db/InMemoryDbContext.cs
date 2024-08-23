@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryAPI.Db
 {
-    public class LibraryContext : DbContext, IDbContext
+    public class InMemoryDbContext : DbContext, IDbContext
     {
-        public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
+        public InMemoryDbContext(DbContextOptions<InMemoryDbContext> options) : base(options)
         {
+                
         }
 
         public DbSet<User> Users { get; set; }

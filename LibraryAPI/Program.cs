@@ -1,5 +1,6 @@
 
 using LibraryAPI.Db;
+using LibraryAPI.Db.IDb;
 using LibraryAPI.Repository;
 using LibraryAPI.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,22 @@ namespace LibraryAPI
             // Add services to the container.
 
             // Add db context
-            builder.Services.AddDbContext<LibraryContext>(
-                ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
-                );
+            bool useInMemoryDb = builder.Configuration.GetValue<bool>("UseInMemoryDb");
 
+            if(useInMemoryDb)
+            {
+                builder.Services.AddDbContext<InMemoryDbContext>(options => 
+                    options.UseInMemoryDatabase("InMemoryDb")
+                );
+                builder.Services.AddScoped<IDbContext, InMemoryDbContext>();
+            }
+            else
+            {
+                builder.Services.AddDbContext<LibraryContext>(
+                    ops => ops.UseSqlServer(builder.Configuration.GetConnectionString("Default"))
+                );
+                builder.Services.AddScoped<IDbContext, LibraryContext>();
+            }
             // Add repositories
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 

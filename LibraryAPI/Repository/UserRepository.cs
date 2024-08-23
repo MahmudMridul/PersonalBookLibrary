@@ -1,4 +1,4 @@
-﻿using LibraryAPI.Db;
+﻿using LibraryAPI.Db.IDb;
 using LibraryAPI.Models;
 using LibraryAPI.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +7,9 @@ namespace LibraryAPI.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly LibraryContext _db;
+        private readonly IDbContext _db;
 
-        public UserRepository(LibraryContext db) 
+        public UserRepository(IDbContext db) 
         {
             _db = db;
         }
